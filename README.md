@@ -81,17 +81,7 @@ A results consolidation and feature exploration notebook that includes:
 
 ```bash
 pip install numpy pandas matplotlib scikit-learn xgboost optuna seaborn
-
+```
 Run Jupyter Notebook
-Bash
-
-jupyter notebook
-📂 Repository Structure
-📦 TaleOfTwoMarkets
-├── Market_TARP_Volatility.ipynb
-├── Optuna_Assignment1TaleofTwoBozos.ipynb
-├── Assignment1TaleofTwoBozosMaster.ipynb
-├── roc_curve.png
-└── FreeLunch9.joblib
-✨ Key Insight
+Key Insight
 The model was able to distinguish pre- and post-TARP trading days with high predictive performance, suggesting measurable shifts in intraday market dynamics following government intervention — particularly in volatility and volume patterns across sectors.
