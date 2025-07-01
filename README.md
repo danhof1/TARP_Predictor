@@ -40,31 +40,45 @@ To explore market microstructure features and visualize regime changes around th
 Tune hyperparameters for classifiers using `Optuna` to improve classification of pre/post-TARP days.
 
 ### Methods
-- Search Space:  
-  - Learning rate, dropout, weight decay  
-  - Loss functions (e.g., binary cross-entropy, Focal Loss, custom)  
-  - Optimizers (Adam, SGD variants)  
-- 5-fold cross-validation on training data.
-- AUC-ROC used as the objective for trials.
+- Search space included:
+  - Learning rate
+  - Dropout rate
+  - Regularization parameters (`alpha`, `lambda`)
+  - Tree-specific parameters (`max_depth`, `gamma`, etc.)
+- 5-fold cross-validation on training data
+- Objective: Maximize AUC-ROC
 
 ### Outcome
-- Found optimal configurations that maximized AUC-ROC.
-- Best-performing model parameters passed to final training notebook.
+- Optuna generated optimal values, passed to `GridSearchCV` for fine-tuning.
+- Best configuration used for the final model training.
 
 ---
 
 ## 3. Final Model & Results
 
-### Objective
-Train and evaluate the final classification model using the full engineered feature set and Optuna-selected hyperparameters.
+### Model Used
+- **XGBoost Classifier** (`xgb.XGBClassifier(eval_metric='auc', random_state=42)`)
 
-### Classifier Used
-- (Assumed from codebase) Ensemble model or tuned neural network.
+### Best Hyperparameters (via Optuna + GridSearchCV)
+```python
+{
+  'max_depth': 5,
+  'learning_rate': 0.128,
+  'subsample': 0.948,
+  'colsample_bytree': 0.953,
+  'min_child_weight': 3,
+  'gamma': 1.423,
+  'alpha': 0.071,    # L1 regularization
+  'lambda': 1.251    # L2 regularization
+}
+```
 
-### Metrics
-- **Evaluation Metric**: AUC-ROC  
-- Achieved strong separability between pre- and post-TARP samples.
-- Model was able to generalize well on holdout test data.
+### Threshold Adjustment
+- Prediction threshold set to **0.3** to improve sensitivity to post-TARP days.
+
+### Evaluation
+- Model performance evaluated with AUC-ROC and classification report.
+- ROC curve was saved and analyzed.
 
 ---
 
@@ -73,7 +87,7 @@ Train and evaluate the final classification model using the full engineered feat
 - A combination of financial domain knowledge and machine learning was used to detect regime shifts in trading behavior.
 - Feature engineering around volatility, returns, and volume timing captured the TARP impact.
 - Optimization via Optuna significantly boosted model performance.
-- The final classifier successfully dated market days with high accuracy, supporting the hypothesis of a structural market change post-TARP.
+- The final XGBoost classifier successfully dated market days with high accuracy, supporting the hypothesis of a structural market change post-TARP.
 
 ---
 
@@ -82,4 +96,3 @@ Train and evaluate the final classification model using the full engineered feat
 - Expand feature set to include macroeconomic indicators or order book data.
 - Apply causal inference techniques to isolate TARP’s true market impact.
 - Incorporate time-aware models (e.g., LSTMs or transformers) for sequential pattern learning.
-
